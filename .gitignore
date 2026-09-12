@@ -1,0 +1,7 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+bin
+lib
+include
+lib64
+AtomicCards.json
+creatures_image_urls.json
