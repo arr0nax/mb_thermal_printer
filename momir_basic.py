@@ -63,7 +63,7 @@ def print_random_image(cmc): #function to print image
     except Exception as e:
         print("An error occurred:", e)
 
-#print_random_image(0)
+print_random_image(0)
 
 debounce_delay = 0.2  # Adjust this value as needed for your buttons
 

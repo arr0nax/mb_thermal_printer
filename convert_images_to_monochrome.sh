@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Folder containing cmc folders which contain card images
-IMAGE_ROOT="path-to-folder-containing-cmc-image-folders"
+IMAGE_ROOT="/home/arronax/mb_thermal_printer/images"
 
 # Iterate through all subdirectories
 for dir in "${IMAGE_ROOT}"/*; do
@@ -33,3 +33,4 @@ for dir in "${IMAGE_ROOT}"/*; do
         echo "No JPG files found in directory: $dir"
     fi
 done
+
