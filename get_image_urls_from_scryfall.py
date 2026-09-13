@@ -37,7 +37,7 @@ if os.path.exists(LAST_DATE_FILE):
 
 query = BASE_QUERY
 if last_date:
-    query = f"{query} date>={last_date}"  # >= so same day releases are not missed
+    query = f"{query} date>{last_date}" 
     print(f"Searching for cards released on or after {last_date}")
 else:
     print("No previous search date found, fetching everything")
