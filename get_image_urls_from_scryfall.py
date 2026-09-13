@@ -1,5 +1,6 @@
 import os
 import time
+import datetime
 import requests
 import json
 
@@ -28,12 +29,14 @@ if os.path.exists(LAST_DATE_FILE):
     with open(LAST_DATE_FILE, 'r', encoding='utf-8') as fin:
         last_date = fin.read().strip() or None
 
-query = BASE_QUERY
+today = datetime.date.today().isoformat()
+
+query = f"{BASE_QUERY} date<={today}"  # spoiled cards from unreleased sets have future dates
 if last_date:
     query = f"{query} date>{last_date}" 
-    print(f"Searching for cards released after {last_date}")
+    print(f"Searching for cards released after {last_date} and on or before {today}")
 else:
-    print("No previous search date found, fetching everything")
+    print(f"No previous search date found, fetching everything released on or before {today}")
 
 image_urls = []  # only this run's cards, previous downloads already happened
 new_count = 0
