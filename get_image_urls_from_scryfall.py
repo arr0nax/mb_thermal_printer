@@ -23,13 +23,6 @@ def get_image_url(card):
     return None
 
 
-def load_json(path, default):
-    if not os.path.exists(path):
-        return default
-    with open(path, 'r', encoding='utf-8') as fin:
-        return json.load(fin)
-
-
 last_date = None
 if os.path.exists(LAST_DATE_FILE):
     with open(LAST_DATE_FILE, 'r', encoding='utf-8') as fin:
@@ -38,11 +31,11 @@ if os.path.exists(LAST_DATE_FILE):
 query = BASE_QUERY
 if last_date:
     query = f"{query} date>{last_date}" 
-    print(f"Searching for cards released on or after {last_date}")
+    print(f"Searching for cards released after {last_date}")
 else:
     print("No previous search date found, fetching everything")
 
-image_urls = load_json(OUTPUT_FILE, [])
+image_urls = []  # only this run's cards, previous downloads already happened
 new_count = 0
 newest_date = last_date
 
@@ -97,9 +90,6 @@ while url:
     if not url:
         completed = True
 
-# the date filter is inclusive, so cards released on the watermark day come back each run
-image_urls = list({card["name"]: card for card in image_urls}.values())
-
 with open(OUTPUT_FILE, 'w') as fout:  # write image url's to json file
     json.dump(image_urls, fout)
 
@@ -109,4 +99,4 @@ if completed and newest_date:
         fout.write(newest_date)
     print(f"Saved latest release date {newest_date} to {LAST_DATE_FILE}")
 
-print(f"Added {new_count} new cards, {len(image_urls)} total in {OUTPUT_FILE}")
+print(f"Wrote {len(image_urls)} new cards to {OUTPUT_FILE}")
