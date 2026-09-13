@@ -1,0 +1,7 @@
+# Data collection / image download (runs anywhere)
+requests
+
+# Runs on the Raspberry Pi only
+python-escpos
+Pillow
+RPi.GPIO

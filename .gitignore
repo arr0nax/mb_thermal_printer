@@ -6,3 +6,4 @@ lib64
 AtomicCards.json
 creatures_image_urls.json
 last_search_date.txt
+__pycache__/

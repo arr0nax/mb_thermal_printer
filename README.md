@@ -18,7 +18,12 @@ Description of files: <br />
 **get_image_urls_from_scryfall.py** - Get URLs for the actual image files from Scryfall, uses the Scryfall API and creates a new JSON file for us <br />
 **download_images_from_scryfall.py** - Downloads the actual images into folders from Scryfalls database <br />
 **convert_images_to_monochrome.sh** - Converts the JPG files into monochrome BMP files, this needs to be run on a Linux installation with imagemagick <br />
-**momir_basic.py** - Actual python program that runs on the Pi for the printer <br />
+**momir.py** - Actual python program that runs on the Pi for the printer <br />
+**restart.py** - Watches a button and restarts the momir service <br />
+**run_momir.sh / run_restart.sh** - Wrappers used by systemd/crontab to launch the scripts with the venv python <br />
+**avatar.py, test.py** - Small printer test scripts <br />
+**button.py, 5press.py, count.py, display.py, step-res.py** - GPIO test scripts for the buttons and the 7 segment display <br />
+**requirements.txt** - Python dependencies (`pip install -r requirements.txt`) <br />
 
 I used the following hardware <br />
 3x KY-004 Push Button  <br />

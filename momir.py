@@ -86,7 +86,7 @@ def print_random_image(cmc): #function to print image
         print("An error occurred:", e)
 
 def print_vanguard():
-    p.image("/home/arronax/print/avatar.bmp")
+    p.image(os.path.join(os.path.dirname(os.path.abspath(__file__)), "avatar.bmp"))
 
 
 
