@@ -2,6 +2,8 @@ import os
 import urllib.request 
 import json
 
+IMAGE_ROOT = "../images"
+
 def download_images_from_json(json_file):
     with open(json_file, 'r', encoding='utf-8') as file:
         data = json.load(file)
@@ -14,7 +16,7 @@ def download_image(item):
     name = item["name"]
     
     # Create directory if it doesn't exist
-    directory = str(cmc)
+    directory = os.path.join(IMAGE_ROOT, str(cmc))
     if not os.path.exists(directory):
         os.makedirs(directory)
     
