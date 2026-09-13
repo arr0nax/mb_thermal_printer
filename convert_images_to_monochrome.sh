@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Folder containing cmc folders which contain card images
-IMAGE_ROOT="/home/arronax/images"
+IMAGE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/images"
 
 # Iterate through all subdirectories
 for dir in "${IMAGE_ROOT}"/*; do

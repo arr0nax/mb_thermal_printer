@@ -2,6 +2,9 @@ import RPi.GPIO as IO
 from escpos.printer import Serial
 import os, random, sys, time
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGE_ROOT = os.path.join(BASE_DIR, 'images')
+
 p = Serial(devfile='/dev/serial0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=1.00, dsrdtr=True) #initilize thermal printer serial 
 # Define the GPIO pin connected to the button
 UP_BUTTON_PIN = 27
@@ -75,9 +78,9 @@ def PORT(pin):                    # assigning GPIO logic by taking 'pin' value
         IO.output(h,0)            # if  bit7 of 8bit 'pin' is false, pull PINh low
 
 def print_random_image(cmc): #function to print image
-    path = '/home/arronax/bitmap_images/' + str(cmc) + '/'
+    path = os.path.join(IMAGE_ROOT, str(cmc), 'converted_files')
     try:
-        image_path = path + random.choice(os.listdir(path))
+        image_path = os.path.join(path, random.choice(os.listdir(path)))
         p.image(image_path)
         p.textln("")
         p.textln("")
@@ -86,7 +89,7 @@ def print_random_image(cmc): #function to print image
         print("An error occurred:", e)
 
 def print_vanguard():
-    p.image(os.path.join(os.path.dirname(os.path.abspath(__file__)), "avatar.bmp"))
+    p.image(os.path.join(BASE_DIR, "avatar.bmp"))
 
 
 

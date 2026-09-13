@@ -2,7 +2,7 @@ import os
 import urllib.request 
 import json
 
-IMAGE_ROOT = "../images"
+IMAGE_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "images")
 
 def download_images_from_json(json_file):
     with open(json_file, 'r', encoding='utf-8') as file:
