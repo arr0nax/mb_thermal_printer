@@ -133,15 +133,7 @@ def print_random_card(cmc): #function to print a card's text and art
         p.set(align='center')
         with Image.open(os.path.join(path, art_file)) as art:
             half_size = (art.width // 2, art.height // 2)
-            # Send the same (small) pixel data as before, but tell the printer to
-            # stretch each dot 2x in both directions. This doubles the printed
-            # size back to the art's native resolution without transmitting any
-            # extra data over the slow serial link, so print time doesn't change.
-            p.image(
-                art.resize(half_size),
-                high_density_horizontal=False,
-                high_density_vertical=False,
-            )
+            p.image(art.resize(half_size))
         p.textln("")
         p.textln("")
 
