@@ -142,7 +142,7 @@ def print_random_card(cmc): #function to print a card's text and art
             p.set(align='right', bold=True, custom_size=True, width=2, height=2)
             p.textln(f"{card['power']}/{card['toughness']}")
 
-        p.set(align='left', bold=False, custom_size=False)
+        p.set(align='left', bold=False, normal_textsize=True)
         p.textln("")
         p.textln("")
         p.textln("")
