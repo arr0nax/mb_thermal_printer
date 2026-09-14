@@ -1,7 +1,11 @@
+import json, logging, os, random, sys, textwrap, time
+
+logging.getLogger('escpos').setLevel(logging.WARNING)
+logging.getLogger('serial').setLevel(logging.WARNING)
+
 import RPi.GPIO as IO
 from escpos.printer import Serial
 from PIL import Image
-import json, os, random, sys, textwrap, time
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ART_ROOT = os.path.join(BASE_DIR, 'art')
