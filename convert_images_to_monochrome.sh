@@ -31,7 +31,8 @@ for dir in "${target_dirs[@]}"; do
                 fi
 
                 # Use ImageMagick's convert command to perform the conversion
-                convert "$jpg_file" -resize 384x -colorspace Gray -gamma 1.7 -ordered-dither o8x8 "$output_file"
+                # +level lifts the black floor (e.g., 20% gray minimum) so dark areas don't print solid black
+                convert "$jpg_file" -resize 192x -colorspace Gray +level 20%,100% -gamma 2.0 -ordered-dither o8x8 "$output_file"
                 
                 # Check if conversion was successful
                 if [ $? -eq 0 ]; then
