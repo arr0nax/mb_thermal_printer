@@ -8,6 +8,7 @@ SEARCH_URL = 'https://api.scryfall.com/cards/search'
 BASE_QUERY = 'type:creature (game:paper) (-is:digital -is:funny) is:firstprint is:notuniversesbeyond prefer:best'
 CARDS_FILE = 'cards.json'
 LAST_DATE_FILE = 'last_search_date.txt'
+REQUEST_DELAY_SECONDS = 1
 HEADERS = {
     'User-Agent': 'mb_thermal_printer/1.0',
     'Accept': 'application/json',
@@ -87,7 +88,7 @@ page = 0
 completed = False
 
 while url:
-    time.sleep(0.1)  # scryfall asks for 50-100ms between requests
+    time.sleep(REQUEST_DELAY_SECONDS)
     response = None
     try:
         response = requests.get(url, params=params, headers=HEADERS, timeout=30)

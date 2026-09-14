@@ -1,4 +1,4 @@
-import json, logging, os, random, sys, textwrap, time
+import json, logging, os, random, sys, textwrap, time, unicodedata
 
 logging.getLogger('escpos').setLevel(logging.WARNING)
 logging.getLogger('serial').setLevel(logging.WARNING)
@@ -93,7 +93,11 @@ def PORT(pin):                    # assigning GPIO logic by taking 'pin' value
         IO.output(h,0)            # if  bit7 of 8bit 'pin' is false, pull PINh low
 
 def format_printer_text(text):
-    return text.translate(TEXT_REPLACEMENTS)
+    text = text.translate(TEXT_REPLACEMENTS)
+    return unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('ascii')
+
+def front_face_text(text):
+    return text.split(' // ', 1)[0]
 
 def print_wrapped_text(text, width=LINE_WIDTH):
     text = format_printer_text(text)
@@ -119,8 +123,8 @@ def print_random_card(cmc): #function to print a card's text and art
             return
 
         p.set(align='left', bold=True)
-        card_name = format_printer_text(card['name'])
-        mana_cost = format_printer_text(card.get('mana_cost') or '')
+        card_name = format_printer_text(front_face_text(card['name']))
+        mana_cost = format_printer_text(front_face_text(card.get('mana_cost') or ''))
         padding = LINE_WIDTH - len(card_name) - len(mana_cost)
         header = card_name + (' ' * padding if padding > 0 else ' ') + mana_cost
         p.textln(header)
@@ -135,7 +139,7 @@ def print_random_card(cmc): #function to print a card's text and art
 
         p.set(align='left', bold=False)
         if card.get('type_line'):
-            p.textln(format_type_line(card['type_line']))
+            p.textln(format_type_line(front_face_text(card['type_line'])))
             p.textln("")
 
         oracle_text = card.get('oracle_text')
