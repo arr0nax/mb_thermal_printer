@@ -1,5 +1,6 @@
 import RPi.GPIO as IO
 from escpos.printer import Serial
+from PIL import Image
 import json, os, random, sys, textwrap, time
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -98,7 +99,10 @@ def print_random_card(cmc): #function to print a card's text and art
         header = card['name'] + (' ' * padding if padding > 0 else ' ') + mana_cost
         p.textln(header)
 
-        p.image(os.path.join(path, art_file))
+        p.set(align='center')
+        with Image.open(os.path.join(path, art_file)) as art:
+            half_size = (art.width // 2, art.height // 2)
+            p.image(art.resize(half_size))
 
         p.set(align='center', bold=False)
         if card.get('type_line'):
