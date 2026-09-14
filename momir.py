@@ -92,6 +92,9 @@ def print_wrapped_text(text, width=LINE_WIDTH):
         for line in textwrap.wrap(paragraph, width=width):
             p.textln(line)
 
+def format_type_line(type_line):
+    return type_line.replace(' — ', ' - ').replace(' – ', ' - ')
+
 def print_random_card(cmc): #function to print a card's text and art
     path = os.path.join(ART_ROOT, str(cmc), 'converted_files')
     try:
@@ -115,7 +118,7 @@ def print_random_card(cmc): #function to print a card's text and art
 
         p.set(align='left', bold=False)
         if card.get('type_line'):
-            p.textln(card['type_line'])
+            p.textln(format_type_line(card['type_line']))
 
         oracle_text = card.get('oracle_text')
         if oracle_text:
