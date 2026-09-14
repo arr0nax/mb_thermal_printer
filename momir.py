@@ -129,10 +129,10 @@ def print_random_card(cmc): #function to print a card's text and art
             print_wrapped_text(oracle_text)
 
         if card.get('power') and card.get('toughness'):
-            p.set(align='right', bold=True)
+            p.set(align='right', bold=True, custom_size=True, width=2, height=2)
             p.textln(f"{card['power']}/{card['toughness']}")
 
-        p.set(align='left', bold=False)
+        p.set(align='left', bold=False, custom_size=False)
         p.textln("")
         p.textln("")
         p.textln("")
