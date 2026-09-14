@@ -114,7 +114,7 @@ def print_wrapped_text(text, width=LINE_WIDTH):
 def format_type_line(type_line):
     return format_printer_text(type_line)
 
-def print_image_paced(image, chunk_size=256, delay=0.08):
+def print_image_paced(image, chunk_size=256, delay=0.2):
     # No flow-control wiring to the printer (TX+GND only), so a full-speed burst
     # can overflow its buffer and drop bytes, shearing the image diagonally.
     # Trickle the raster payload instead of sending it in one write.
