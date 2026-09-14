@@ -5,7 +5,6 @@ import json, os, random, sys, textwrap, time
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ART_ROOT = os.path.join(BASE_DIR, 'art')
 CARDS_FILE = os.path.join(BASE_DIR, 'cards.json')
-ORACLE_TEXT_WIDTH = 42  # font 'b' is smaller, so more characters fit per line
 LINE_WIDTH = 32  # characters per line at the printer's default font 'a' size
 
 with open(CARDS_FILE, 'r', encoding='utf-8') as f:
@@ -107,9 +106,8 @@ def print_random_card(cmc): #function to print a card's text and art
 
         oracle_text = card.get('oracle_text')
         if oracle_text:
-            p.set(align='left', font='b')
-            p.textln(textwrap.fill(oracle_text, width=ORACLE_TEXT_WIDTH))
-            p.set(font='a')
+            p.set(align='left', font='a')
+            p.textln(textwrap.fill(oracle_text, width=LINE_WIDTH))
 
         if card.get('power') and card.get('toughness'):
             p.set(align='right', bold=True)
