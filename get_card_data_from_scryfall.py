@@ -39,17 +39,25 @@ def build_card_record(card):
     art_url = get_art_url(card)
     if not art_url:
         return None
+    type_line = get_field(card, "type_line") or ""
+    if "Creature" not in type_line or "Land" in type_line:
+        return None
     return {
         "id": card["id"],
         "name": card["name"],
         "mana_cost": get_field(card, "mana_cost"),
         "cmc": card.get("cmc"),
-        "type_line": get_field(card, "type_line"),
+        "type_line": type_line,
         "oracle_text": get_field(card, "oracle_text"),
         "power": get_field(card, "power"),
         "toughness": get_field(card, "toughness"),
         "art_url": art_url,
     }
+
+
+def is_creature_record(record):
+    type_line = record.get("type_line") or ""
+    return "Creature" in type_line and "Land" not in type_line
 
 
 last_date = None
@@ -60,7 +68,10 @@ if os.path.exists(LAST_DATE_FILE):
 cards_by_id = {}
 if os.path.exists(CARDS_FILE):
     with open(CARDS_FILE, 'r', encoding='utf-8') as fin:
-        cards_by_id = {card["id"]: card for card in json.load(fin)}
+        cards_by_id = {
+            card["id"]: card for card in json.load(fin)
+            if is_creature_record(card)
+        }
 
 today = datetime.date.today().isoformat()
 
