@@ -17,7 +17,12 @@ for dir in "${ART_ROOT}"/*; do
                 
                 # Define the output filename by replacing the extension with bmp
                 output_file="${dir}/converted_files/$(basename -- "$jpg_file" .jpg).bmp"
-                
+
+                if [ -f "$output_file" ]; then
+                    echo "Skipping, already converted: $jpg_file"
+                    continue
+                fi
+
                 # Use ImageMagick's convert command to perform the conversion
                 convert "$jpg_file" -resize 384x -colorspace Gray -monochrome "$output_file"
                 
