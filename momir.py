@@ -5,7 +5,7 @@ import os, random, sys, time
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMAGE_ROOT = os.path.join(BASE_DIR, 'images')
 
-p = Serial(devfile='/dev/serial0', baudrate=19200, bytesize=8, parity='N', stopbits=1, timeout=1.00, dsrdtr=True) #initilize thermal printer serial 
+p = Serial(devfile='/dev/serial0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=1.00, dsrdtr=True) #initilize thermal printer serial 
 # Define the GPIO pin connected to the button
 UP_BUTTON_PIN = 27
 DOWN_BUTTON_PIN = 22
