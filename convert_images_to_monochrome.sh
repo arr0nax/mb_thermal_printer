@@ -3,8 +3,15 @@
 # Folder containing cmc folders which contain card art
 ART_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/art"
 
-# Iterate through all subdirectories
-for dir in "${ART_ROOT}"/*; do
+# Target specific subfolder if provided as an argument (e.g., ./convert_images_to_monochrome.sh 3)
+if [ -n "$1" ]; then
+    target_dirs=("${ART_ROOT}/$1")
+else
+    target_dirs=("${ART_ROOT}"/*)
+fi
+
+# Iterate through subdirectories
+for dir in "${target_dirs[@]}"; do
     # Check if directory is empty
     if [ -d "$dir" ] && [ "$(ls -A "$dir")" ]; then
         # Create a new folder for the converted files
@@ -24,7 +31,7 @@ for dir in "${ART_ROOT}"/*; do
                 fi
 
                 # Use ImageMagick's convert command to perform the conversion
-                convert "$jpg_file" -resize 384x -colorspace Gray -monochrome "$output_file"
+                convert "$jpg_file" -resize 384x -colorspace Gray -gamma 1.7 -ordered-dither o8x8 "$output_file"
                 
                 # Check if conversion was successful
                 if [ $? -eq 0 ]; then
