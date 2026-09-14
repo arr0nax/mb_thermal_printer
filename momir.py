@@ -135,7 +135,13 @@ def print_random_card(cmc): #function to print a card's text and art
         p.set(align='center')
         with Image.open(os.path.join(path, art_file)) as art:
             half_size = (art.width // 2, art.height // 2)
-            p.image(art.resize(half_size))
+            try:
+                p.image(art.resize(half_size))
+            except Exception as image_error:
+                # Image send failed/glitched - resync so the corruption doesn't
+                # bleed into the text printed below.
+                print("Image print failed, skipping image:", image_error)
+                p.hw('INIT')
         p.textln("")
         p.textln("")
 
