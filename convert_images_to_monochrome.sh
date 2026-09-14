@@ -32,7 +32,7 @@ for dir in "${target_dirs[@]}"; do
 
                 # Use ImageMagick's convert command to perform the conversion
                 # +level lifts the black floor (35% gray minimum) and -gamma 2.4 aggressively brightens the image
-                convert "$jpg_file" -resize 192x -colorspace Gray +level 35%,100% -gamma 2.4 -ordered-dither o8x8 "$output_file"
+                convert "$jpg_file" -resize 192x -colorspace Gray +level 20%,100% -gamma 2.0 -ordered-dither o8x8 "$output_file"
                 
                 # Check if conversion was successful
                 if [ $? -eq 0 ]; then
