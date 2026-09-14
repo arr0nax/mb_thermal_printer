@@ -20,7 +20,7 @@ TEXT_REPLACEMENTS = str.maketrans({
 with open(CARDS_FILE, 'r', encoding='utf-8') as f:
     CARDS_BY_ID = {card['id']: card for card in json.load(f)}
 
-p = Serial(devfile='/dev/serial0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=1.00, dsrdtr=False) #initilize thermal printer serial 
+p = Serial(devfile='/dev/serial0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=1.00, dsrdtr=False, xonxoff=True) #initilize thermal printer serial 
 # Define the GPIO pin connected to the button
 UP_BUTTON_PIN = 27
 DOWN_BUTTON_PIN = 22
@@ -115,6 +115,8 @@ def format_type_line(type_line):
 def print_random_card(cmc): #function to print a card's text and art
     path = os.path.join(ART_ROOT, str(cmc), 'converted_files')
     try:
+        # Resync the printer in case a previous job left its parser mid-command
+        p.hw('INIT')
         art_file = random.choice(os.listdir(path))
         card_id = os.path.splitext(art_file)[0]
         card = CARDS_BY_ID.get(card_id)
@@ -159,6 +161,7 @@ def print_random_card(cmc): #function to print a card's text and art
         print("An error occurred:", e)
 
 def print_vanguard():
+    p.hw('INIT')
     p.image(os.path.join(BASE_DIR, "avatar.bmp"))
 
 
