@@ -7,6 +7,11 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ART_ROOT = os.path.join(BASE_DIR, 'art')
 CARDS_FILE = os.path.join(BASE_DIR, 'cards.json')
 LINE_WIDTH = 32  # characters per line at the printer's default font 'a' size
+TEXT_REPLACEMENTS = str.maketrans({
+    '—': '-',
+    '–': '-',
+    '•': '*',
+})
 
 with open(CARDS_FILE, 'r', encoding='utf-8') as f:
     CARDS_BY_ID = {card['id']: card for card in json.load(f)}
@@ -83,7 +88,11 @@ def PORT(pin):                    # assigning GPIO logic by taking 'pin' value
     else:
         IO.output(h,0)            # if  bit7 of 8bit 'pin' is false, pull PINh low
 
+def format_printer_text(text):
+    return text.translate(TEXT_REPLACEMENTS)
+
 def print_wrapped_text(text, width=LINE_WIDTH):
+    text = format_printer_text(text)
     for paragraph in text.splitlines():
         if not paragraph:
             p.textln("")
@@ -93,7 +102,7 @@ def print_wrapped_text(text, width=LINE_WIDTH):
             p.textln(line)
 
 def format_type_line(type_line):
-    return type_line.replace(' — ', ' - ').replace(' – ', ' - ')
+    return format_printer_text(type_line)
 
 def print_random_card(cmc): #function to print a card's text and art
     path = os.path.join(ART_ROOT, str(cmc), 'converted_files')
@@ -106,9 +115,10 @@ def print_random_card(cmc): #function to print a card's text and art
             return
 
         p.set(align='left', bold=True)
-        mana_cost = card.get('mana_cost') or ''
-        padding = LINE_WIDTH - len(card['name']) - len(mana_cost)
-        header = card['name'] + (' ' * padding if padding > 0 else ' ') + mana_cost
+        card_name = format_printer_text(card['name'])
+        mana_cost = format_printer_text(card.get('mana_cost') or '')
+        padding = LINE_WIDTH - len(card_name) - len(mana_cost)
+        header = card_name + (' ' * padding if padding > 0 else ' ') + mana_cost
         p.textln(header)
         p.textln("")
 
