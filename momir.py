@@ -133,7 +133,13 @@ def print_random_card(cmc): #function to print a card's text and art
         p.set(align='center')
         with Image.open(os.path.join(path, art_file)) as art:
             half_size = (art.width // 2, art.height // 2)
-            p.image(art.resize(half_size))
+            resized = art.resize(half_size)
+            p.image(resized)
+            # Printer's own buffer lags behind the write() call at 9600 baud; without this
+            # pause the type line sent right after can land while the image is still
+            # draining, corrupting the tail of the image and the following text.
+            image_bytes = (resized.width // 8 + 1) * resized.height
+            time.sleep(max(0.3, (image_bytes * 10) / 9600))
         p.textln("")
         p.textln("")
 
