@@ -5,7 +5,8 @@ import json, os, random, sys, textwrap, time
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ART_ROOT = os.path.join(BASE_DIR, 'art')
 CARDS_FILE = os.path.join(BASE_DIR, 'cards.json')
-TEXT_WIDTH = 32  # characters per line at the printer's default font size
+ORACLE_TEXT_WIDTH = 42  # font 'b' is smaller, so more characters fit per line
+LINE_WIDTH = 32  # characters per line at the printer's default font 'a' size
 
 with open(CARDS_FILE, 'r', encoding='utf-8') as f:
     CARDS_BY_ID = {card['id']: card for card in json.load(f)}
@@ -92,19 +93,23 @@ def print_random_card(cmc): #function to print a card's text and art
             print(f"No card data found for {card_id}")
             return
 
-        p.set(align='center', bold=True)
-        p.textln(card['name'])
-        p.set(align='center', bold=False)
-        header = ' '.join(part for part in (card.get('mana_cost'), card.get('type_line')) if part)
-        if header:
-            p.textln(header)
+        p.set(align='left', bold=True)
+        mana_cost = card.get('mana_cost') or ''
+        padding = LINE_WIDTH - len(card['name']) - len(mana_cost)
+        header = card['name'] + (' ' * padding if padding > 0 else ' ') + mana_cost
+        p.textln(header)
 
         p.image(os.path.join(path, art_file))
 
+        p.set(align='center', bold=False)
+        if card.get('type_line'):
+            p.textln(card['type_line'])
+
         oracle_text = card.get('oracle_text')
         if oracle_text:
-            p.set(align='left')
-            p.textln(textwrap.fill(oracle_text, width=TEXT_WIDTH))
+            p.set(align='left', font='b')
+            p.textln(textwrap.fill(oracle_text, width=ORACLE_TEXT_WIDTH))
+            p.set(font='a')
 
         if card.get('power') and card.get('toughness'):
             p.set(align='right', bold=True)
