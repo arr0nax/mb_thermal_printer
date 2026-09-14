@@ -20,7 +20,7 @@ TEXT_REPLACEMENTS = str.maketrans({
 with open(CARDS_FILE, 'r', encoding='utf-8') as f:
     CARDS_BY_ID = {card['id']: card for card in json.load(f)}
 
-p = Serial(devfile='/dev/serial0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=1.00, dsrdtr=True) #initilize thermal printer serial 
+p = Serial(devfile='/dev/serial0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=1.00, dsrdtr=False) #initilize thermal printer serial 
 # Define the GPIO pin connected to the button
 UP_BUTTON_PIN = 27
 DOWN_BUTTON_PIN = 22
@@ -133,13 +133,7 @@ def print_random_card(cmc): #function to print a card's text and art
         p.set(align='center')
         with Image.open(os.path.join(path, art_file)) as art:
             half_size = (art.width // 2, art.height // 2)
-            resized = art.resize(half_size)
-            p.image(resized)
-            # Printer's own buffer lags behind the write() call at 9600 baud; without this
-            # pause the type line sent right after can land while the image is still
-            # draining, corrupting the tail of the image and the following text.
-            image_bytes = (resized.width // 8 + 1) * resized.height
-            time.sleep(max(0.3, (image_bytes * 10) / 9600))
+            p.image(art.resize(half_size))
         p.textln("")
         p.textln("")
 
