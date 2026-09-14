@@ -1,15 +1,9 @@
 import RPi.GPIO as IO
 from escpos.printer import Serial
-from PIL import Image
 import os, random, sys, time
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMAGE_ROOT = os.path.join(BASE_DIR, 'images')
-
-# Rows per chunk and pause between chunks when sending images, to avoid overrunning
-# the printer's buffer at low baud rates (cause of misaligned/skewed prints).
-IMAGE_CHUNK_HEIGHT = 64
-IMAGE_CHUNK_DELAY = 0.1
 
 p = Serial(devfile='/dev/serial0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=1.00, dsrdtr=True) #initilize thermal printer serial 
 # Define the GPIO pin connected to the button
@@ -83,22 +77,11 @@ def PORT(pin):                    # assigning GPIO logic by taking 'pin' value
     else:
         IO.output(h,0)            # if  bit7 of 8bit 'pin' is false, pull PINh low
 
-def print_image_chunked(image_path, chunk_height=IMAGE_CHUNK_HEIGHT, delay=IMAGE_CHUNK_DELAY):
-    # Send the image in horizontal bands with a short pause between each, giving
-    # the printer time to drain its buffer instead of relying on serial flow control.
-    with Image.open(image_path) as img:
-        width, height = img.size
-        for top in range(0, height, chunk_height):
-            bottom = min(top + chunk_height, height)
-            band = img.crop((0, top, width, bottom))
-            p.image(band)
-            time.sleep(delay)
-
 def print_random_image(cmc): #function to print image
     path = os.path.join(IMAGE_ROOT, str(cmc), 'converted_files')
     try:
         image_path = os.path.join(path, random.choice(os.listdir(path)))
-        print_image_chunked(image_path)
+        p.image(image_path)
         p.textln("")
         p.textln("")
         p.textln("")
@@ -106,7 +89,7 @@ def print_random_image(cmc): #function to print image
         print("An error occurred:", e)
 
 def print_vanguard():
-    print_image_chunked(os.path.join(BASE_DIR, "avatar.bmp"))
+    p.image(os.path.join(BASE_DIR, "avatar.bmp"))
 
 
 
