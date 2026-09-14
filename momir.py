@@ -110,15 +110,18 @@ def print_random_card(cmc): #function to print a card's text and art
         padding = LINE_WIDTH - len(card['name']) - len(mana_cost)
         header = card['name'] + (' ' * padding if padding > 0 else ' ') + mana_cost
         p.textln(header)
+        p.textln("")
 
         p.set(align='center')
         with Image.open(os.path.join(path, art_file)) as art:
             half_size = (art.width // 2, art.height // 2)
             p.image(art.resize(half_size))
+        p.textln("")
 
         p.set(align='left', bold=False)
         if card.get('type_line'):
             p.textln(format_type_line(card['type_line']))
+            p.textln("")
 
         oracle_text = card.get('oracle_text')
         if oracle_text:
