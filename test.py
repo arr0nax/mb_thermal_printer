@@ -1,13 +1,13 @@
 from escpos.printer import Serial
 import os, random, sys
 
-IMAGE_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'images')
+ART_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'art')
 
 p = Serial(devfile='/dev/serial0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=1.00, dsrdtr=True) #initilize thermal printer serial 
 
 
 def print_random_image(cmc): #function to print image
-    path = os.path.join(IMAGE_ROOT, str(cmc), 'converted_files')
+    path = os.path.join(ART_ROOT, str(cmc), 'converted_files')
     try:
         image_path = os.path.join(path, random.choice(os.listdir(path)))
         p.image(image_path)

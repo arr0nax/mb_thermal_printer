@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Folder containing cmc folders which contain card images
-IMAGE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/images"
+# Folder containing cmc folders which contain card art
+ART_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/art"
 
 # Iterate through all subdirectories
-for dir in "${IMAGE_ROOT}"/*; do
+for dir in "${ART_ROOT}"/*; do
     # Check if directory is empty
     if [ -d "$dir" ] && [ "$(ls -A "$dir")" ]; then
         # Create a new folder for the converted files

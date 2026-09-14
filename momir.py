@@ -1,9 +1,14 @@
 import RPi.GPIO as IO
 from escpos.printer import Serial
-import os, random, sys, time
+import json, os, random, sys, textwrap, time
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-IMAGE_ROOT = os.path.join(BASE_DIR, 'images')
+ART_ROOT = os.path.join(BASE_DIR, 'art')
+CARDS_FILE = os.path.join(BASE_DIR, 'cards.json')
+TEXT_WIDTH = 32  # characters per line at the printer's default font size
+
+with open(CARDS_FILE, 'r', encoding='utf-8') as f:
+    CARDS_BY_ID = {card['id']: card for card in json.load(f)}
 
 p = Serial(devfile='/dev/serial0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=1.00, dsrdtr=True) #initilize thermal printer serial 
 # Define the GPIO pin connected to the button
@@ -77,11 +82,35 @@ def PORT(pin):                    # assigning GPIO logic by taking 'pin' value
     else:
         IO.output(h,0)            # if  bit7 of 8bit 'pin' is false, pull PINh low
 
-def print_random_image(cmc): #function to print image
-    path = os.path.join(IMAGE_ROOT, str(cmc), 'converted_files')
+def print_random_card(cmc): #function to print a card's text and art
+    path = os.path.join(ART_ROOT, str(cmc), 'converted_files')
     try:
-        image_path = os.path.join(path, random.choice(os.listdir(path)))
-        p.image(image_path)
+        art_file = random.choice(os.listdir(path))
+        card_id = os.path.splitext(art_file)[0]
+        card = CARDS_BY_ID.get(card_id)
+        if not card:
+            print(f"No card data found for {card_id}")
+            return
+
+        p.set(align='center', bold=True)
+        p.textln(card['name'])
+        p.set(align='center', bold=False)
+        header = ' '.join(part for part in (card.get('mana_cost'), card.get('type_line')) if part)
+        if header:
+            p.textln(header)
+
+        p.image(os.path.join(path, art_file))
+
+        oracle_text = card.get('oracle_text')
+        if oracle_text:
+            p.set(align='left')
+            p.textln(textwrap.fill(oracle_text, width=TEXT_WIDTH))
+
+        if card.get('power') and card.get('toughness'):
+            p.set(align='right', bold=True)
+            p.textln(f"{card['power']}/{card['toughness']}")
+
+        p.set(align='left', bold=False)
         p.textln("")
         p.textln("")
         p.textln("")
@@ -117,7 +146,7 @@ try:
 
         if(print_button_state and count != 14):
             PORT(0x73)
-            print_random_image(count)
+            print_random_card(count)
             
 
         pin = DISPLAY[count]        # assigning value to 'pin' for each digit

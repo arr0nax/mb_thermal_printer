@@ -4,7 +4,8 @@ lib
 include
 lib64
 AtomicCards.json
-creatures_image_urls.json
+cards.json
 last_search_date.txt
 __pycache__/
+art/
 images/
