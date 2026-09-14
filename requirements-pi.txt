@@ -1,0 +1,5 @@
+-r requirements.txt
+
+# Raspberry Pi GPIO support. This package uses Linux-only headers and will not
+# build on macOS.
+RPi.GPIO

@@ -24,8 +24,9 @@ Description of files: <br />
 **run_momir.sh / run_restart.sh** - Wrappers used by systemd/crontab to launch the scripts with the venv python <br />
 **avatar.py, test.py** - Small printer test scripts <br />
 **button.py, 5press.py, count.py, display.py, step-res.py** - GPIO test scripts for the buttons and the 7 segment display <br />
-**requirements.txt** - Python dependencies (`pip install -r requirements.txt`) <br />
-**Makefile** - `make install` creates the venv in the project root and installs the dependencies. On the Pi, use `make install VENV_FLAGS=--system-site-packages` if you installed RPi.GPIO with apt <br />
+**requirements.txt** - Local/dev Python dependencies (`pip install -r requirements.txt`) <br />
+**requirements-pi.txt** - Raspberry Pi runtime dependencies, including GPIO support <br />
+**Makefile** - `make install` creates the venv in the project root and installs Raspberry Pi runtime dependencies. On macOS, use `make install-mac`. On the Pi, use `make install VENV_FLAGS=--system-site-packages` if you installed RPi.GPIO with apt <br />
 **cards.json** - Card database (name, mana cost, type line, oracle text, power/toughness, art URL) keyed by scryfall id. Git ignores this file <br />
 **art/** - Downloaded card art, one folder per cmc, with the printable BMPs in `art/<cmc>/converted_files/`. Git ignores this folder <br />
 

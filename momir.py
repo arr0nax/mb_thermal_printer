@@ -83,6 +83,15 @@ def PORT(pin):                    # assigning GPIO logic by taking 'pin' value
     else:
         IO.output(h,0)            # if  bit7 of 8bit 'pin' is false, pull PINh low
 
+def print_wrapped_text(text, width=LINE_WIDTH):
+    for paragraph in text.splitlines():
+        if not paragraph:
+            p.textln("")
+            continue
+
+        for line in textwrap.wrap(paragraph, width=width):
+            p.textln(line)
+
 def print_random_card(cmc): #function to print a card's text and art
     path = os.path.join(ART_ROOT, str(cmc), 'converted_files')
     try:
@@ -104,14 +113,14 @@ def print_random_card(cmc): #function to print a card's text and art
             half_size = (art.width // 2, art.height // 2)
             p.image(art.resize(half_size))
 
-        p.set(align='center', bold=False)
+        p.set(align='left', bold=False)
         if card.get('type_line'):
             p.textln(card['type_line'])
 
         oracle_text = card.get('oracle_text')
         if oracle_text:
             p.set(align='left', font='a')
-            p.textln(textwrap.fill(oracle_text, width=LINE_WIDTH))
+            print_wrapped_text(oracle_text)
 
         if card.get('power') and card.get('toughness'):
             p.set(align='right', bold=True)

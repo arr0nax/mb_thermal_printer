@@ -5,9 +5,13 @@ PIP := ./bin/pip
 
 .DEFAULT_GOAL := install
 
-.PHONY: install venv clean
+.PHONY: install install-mac venv clean
 
 install: venv
+	$(PIP) install --upgrade pip
+	$(PIP) install -r requirements-pi.txt
+
+install-mac: venv
 	$(PIP) install --upgrade pip
 	$(PIP) install -r requirements.txt
 
