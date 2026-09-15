@@ -40,7 +40,7 @@ def build_card_record(card):
     if not art_url:
         return None
     type_line = get_field(card, "type_line") or ""
-    if "Creature" not in type_line or "Land" in type_line:
+    if "Creature" not in type_line:
         return None
     return {
         "id": card["id"],
@@ -57,7 +57,8 @@ def build_card_record(card):
 
 def is_creature_record(record):
     type_line = record.get("type_line") or ""
-    return "Creature" in type_line and "Land" not in type_line
+    front_type_line = type_line.split(" // ", 1)[0]
+    return "Creature" in front_type_line
 
 
 last_date = None

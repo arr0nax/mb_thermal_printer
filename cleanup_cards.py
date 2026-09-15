@@ -10,7 +10,8 @@ from pathlib import Path
 
 def is_creature_record(card):
     type_line = card.get("type_line") or ""
-    return "Creature" in type_line and "Land" not in type_line
+    front_type_line = type_line.split(" // ", 1)[0]
+    return "Creature" in front_type_line
 
 
 def cleanup_cards(cards):
