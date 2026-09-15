@@ -10,40 +10,45 @@ else
     target_dirs=("${ART_ROOT}"/*)
 fi
 
-# Iterate through subdirectories
+# Collect only images that still need conversion so skipped files stay silent.
+pending_files=()
 for dir in "${target_dirs[@]}"; do
-    # Check if directory is empty
-    if [ -d "$dir" ] && [ "$(ls -A "$dir")" ]; then
-        # Create a new folder for the converted files
-        mkdir -p "${dir}/converted_files"
-        
-        # Iterate through each JPG file and convert it to a rescaled monochrome bitmap
+    if [ -d "$dir" ]; then
         for jpg_file in "${dir}"/*.jpg; do
             if [ -f "$jpg_file" ]; then
-                # Define the output filename by replacing the extension with bmp
                 output_file="${dir}/converted_files/$(basename -- "$jpg_file" .jpg).bmp"
-
-                if [ -f "$output_file" ]; then
-                    continue
-                fi
-
-                echo "Resizing and converting to grayscale for: $jpg_file"
-
-                # Use ImageMagick's convert command to perform the conversion
-                # +level lifts the black floor and brightens the image
-                convert "$jpg_file" -resize 384x -colorspace Gray +level 20%,100% -gamma 2.0 -ordered-dither o8x8 "$output_file"
-
-                
-                # Check if conversion was successful
-                if [ $? -eq 0 ]; then
-                    echo "Conversion successful: $jpg_file"
-                else
-                    echo "Error converting: $jpg_file"
+                if [ ! -f "$output_file" ]; then
+                    pending_files+=("$jpg_file")
                 fi
             fi
         done
-    else
-        echo "No JPG files found in directory: $dir"
     fi
 done
+
+total=${#pending_files[@]}
+completed=0
+bar_width=20
+for jpg_file in "${pending_files[@]}"; do
+    dir=$(dirname "$jpg_file")
+    output_file="${dir}/converted_files/$(basename -- "$jpg_file" .jpg).bmp"
+    mkdir -p "${dir}/converted_files"
+
+    completed=$((completed + 1))
+    filled=$((completed * bar_width / total))
+    empty=$((bar_width - filled))
+    filled_bar=$(printf '%*s' "$filled" '' | tr ' ' '#')
+    empty_bar=$(printf '%*s' "$empty" '')
+    printf '\rConverting [%s%s] %d/%d %s' "$filled_bar" "$empty_bar" "$completed" "$total" "$(basename "$jpg_file")"
+
+    # +level lifts the black floor and brightens the image.
+    convert "$jpg_file" -resize 384x -colorspace Gray +level 20%,100% -gamma 2.0 -ordered-dither o8x8 "$output_file"
+
+    if [ $? -ne 0 ]; then
+        printf '\nError converting: %s\n' "$jpg_file"
+    fi
+done
+
+if [ "$total" -gt 0 ]; then
+    printf '\n'
+fi
 
