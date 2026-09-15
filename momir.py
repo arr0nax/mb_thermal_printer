@@ -142,14 +142,13 @@ def print_random_card(cmc): #function to print a card's text and art
             print(f"No card data found for {card_id}")
             return
 
-        p.set(align='left', bold=True, custom_size=True, width=2, height=2)
+        p.set(align='left', bold=True, density=5)
         card_name = format_printer_text(front_face_text(card['name']))
         mana_cost = format_printer_text(front_face_text(card.get('mana_cost') or ''))
-        header_width = LINE_WIDTH // 2
-        padding = header_width - len(card_name) - len(mana_cost)
+        padding = LINE_WIDTH - len(card_name) - len(mana_cost)
         header = card_name + (' ' * padding if padding > 0 else '') + mana_cost
         p.textln(header)
-        p.set(align='center', normal_textsize=True)
+        p.set(align='center', normal_textsize=True, density=4)
         p.textln("")
 
         with Image.open(os.path.join(path, art_file)) as art:
