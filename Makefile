@@ -16,10 +16,7 @@ install-mac: venv
 	$(PIP) install -r requirements.txt
 
 update:
-	./bin/python get_card_data_from_scryfall.py
-	./bin/python cleanup_cards.py --write
-	./bin/python download_art_from_scryfall.py
-	./convert_images_to_monochrome.sh
+	./bin/python update_cards.py
 
 # the venv lives in the project root, so bin/python3 is the interpreter
 venv:

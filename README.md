@@ -16,10 +16,9 @@ A step by step on how this was done is
 - Add python script to crontab startup so that it is automatically started when the Pi is powered on
 
 Description of files: <br />
-**get_card_data_from_scryfall.py** - Get card data (name, mana cost, type, oracle text, power/toughness, art URL) from Scryfall's API and merge it into `cards.json` <br />
+**update_cards.py** - Fetches newly released creature cards from Scryfall, merges them into `cards.json`, downloads art only for newly added cards, and converts only those images to printable BMPs. Run it with `make update` or `./bin/python update_cards.py`. Use `--cmc N` to limit a test run to one mana value; scoped runs leave the global release-date watermark unchanged so a later full update will not skip other cards <br />
 **cleanup_cards.py** - Removes records whose front face is not a creature from `cards.json` (land creatures are allowed); run without options for a dry run, or with `--write` to save the cleanup <br />
-**download_art_from_scryfall.py** - Downloads only the card art (via Scryfall's `art_crop`) into folders keyed by cmc and scryfall id; use `--cmc N` to download only one converted mana cost <br />
-**convert_images_to_monochrome.sh** - Converts the art JPG files into monochrome BMP files, this needs to be run on a Linux installation with imagemagick <br />
+**get_card_data_from_scryfall.py**, **download_art_from_scryfall.py**, **convert_images_to_monochrome.sh** - Standalone maintenance tools for rebuilding or repairing individual stages of the card update process <br />
 **momir.py** - Actual python program that runs on the Pi for the printer. Prints the card's name/type/text/power-toughness using the printer's text methods, and the art as a bitmap image <br />
 **restart.py** - Watches a button and restarts the momir service <br />
 **run_momir.sh / run_restart.sh** - Wrappers used by systemd/crontab to launch the scripts with the venv python <br />
@@ -27,7 +26,7 @@ Description of files: <br />
 **button.py, 5press.py, count.py, display.py, step-res.py** - GPIO test scripts for the buttons and the 7 segment display <br />
 **requirements.txt** - Local/dev Python dependencies (`pip install -r requirements.txt`) <br />
 **requirements-pi.txt** - Raspberry Pi runtime dependencies, including GPIO support <br />
-**Makefile** - `make install` creates the venv in the project root and installs Raspberry Pi runtime dependencies. On macOS, use `make install-mac`. On the Pi, use `make install VENV_FLAGS=--system-site-packages` if you installed RPi.GPIO with apt <br />
+**Makefile** - `make install` creates the venv in the project root and installs Raspberry Pi runtime dependencies. On macOS, use `make install-mac`. On the Pi, use `make install VENV_FLAGS=--system-site-packages` if you installed RPi.GPIO with apt. `make update` runs the combined incremental card and art update <br />
 **cards.json** - Card database (name, mana cost, type line, oracle text, power/toughness, art URL) keyed by scryfall id. Git ignores this file <br />
 **art/** - Downloaded card art, one folder per cmc, with the printable BMPs in `art/<cmc>/converted_files/`. Git ignores this folder <br />
 
