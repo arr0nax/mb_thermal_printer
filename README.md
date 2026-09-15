@@ -18,7 +18,7 @@ A step by step on how this was done is
 Description of files: <br />
 **get_card_data_from_scryfall.py** - Get card data (name, mana cost, type, oracle text, power/toughness, art URL) from Scryfall's API and merge it into `cards.json` <br />
 **cleanup_cards.py** - Removes records whose front face is not a creature from `cards.json` (land creatures are allowed); run without options for a dry run, or with `--write` to save the cleanup <br />
-**download_art_from_scryfall.py** - Downloads only the card art (via Scryfall's `art_crop`) into folders keyed by cmc and scryfall id <br />
+**download_art_from_scryfall.py** - Downloads only the card art (via Scryfall's `art_crop`) into folders keyed by cmc and scryfall id; use `--cmc N` to download only one converted mana cost <br />
 **convert_images_to_monochrome.sh** - Converts the art JPG files into monochrome BMP files, this needs to be run on a Linux installation with imagemagick <br />
 **momir.py** - Actual python program that runs on the Pi for the printer. Prints the card's name/type/text/power-toughness using the printer's text methods, and the art as a bitmap image <br />
 **restart.py** - Watches a button and restarts the momir service <br />
