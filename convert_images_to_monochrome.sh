@@ -20,15 +20,14 @@ for dir in "${target_dirs[@]}"; do
         # Iterate through each JPG file and convert it to a rescaled monochrome bitmap
         for jpg_file in "${dir}"/*.jpg; do
             if [ -f "$jpg_file" ]; then
-                echo "Resizing and converting to grayscale for: $jpg_file"
-                
                 # Define the output filename by replacing the extension with bmp
                 output_file="${dir}/converted_files/$(basename -- "$jpg_file" .jpg).bmp"
 
                 if [ -f "$output_file" ]; then
-                    echo "Skipping, already converted: $jpg_file"
                     continue
                 fi
+
+                echo "Resizing and converting to grayscale for: $jpg_file"
 
                 # Use ImageMagick's convert command to perform the conversion
                 # +level lifts the black floor and brightens the image

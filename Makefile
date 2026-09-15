@@ -5,7 +5,7 @@ PIP := ./bin/pip
 
 .DEFAULT_GOAL := install
 
-.PHONY: install install-mac seed venv clean
+.PHONY: install install-mac update venv clean
 
 install: venv
 	$(PIP) install --upgrade pip
@@ -15,7 +15,7 @@ install-mac: venv
 	$(PIP) install --upgrade pip
 	$(PIP) install -r requirements.txt
 
-seed:
+update:
 	./bin/python get_card_data_from_scryfall.py
 	./bin/python cleanup_cards.py --write
 	./bin/python download_art_from_scryfall.py
