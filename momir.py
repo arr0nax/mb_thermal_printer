@@ -165,12 +165,13 @@ def print_random_card(cmc): #function to print a card's text and art
 
         p.set(align='left', bold=False)
         if card.get('type_line'):
+            p.set(bold=True, density=5)
             p.textln(format_type_line(front_face_text(card['type_line'])))
             p.textln("")
 
         oracle_text = card.get('oracle_text')
         if oracle_text:
-            p.set(align='left', font='a')
+            p.set(align='left', font='a', bold=False, density=4)
             print_wrapped_text(oracle_text)
 
         if card.get('power') and card.get('toughness'):
