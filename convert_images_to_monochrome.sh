@@ -14,6 +14,7 @@ fi
 pending_files=()
 for dir in "${target_dirs[@]}"; do
     if [ -d "$dir" ]; then
+        echo "Checking for unconverted cards in: $dir"
         for jpg_file in "${dir}"/*.jpg; do
             if [ -f "$jpg_file" ]; then
                 output_file="${dir}/converted_files/$(basename -- "$jpg_file" .jpg).bmp"
