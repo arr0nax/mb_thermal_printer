@@ -5,8 +5,6 @@ logging.getLogger('serial').setLevel(logging.WARNING)
 
 import RPi.GPIO as IO
 from escpos.printer import Serial
-from escpos.constants import GS
-from escpos.image import EscposImage
 from PIL import Image
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -114,22 +112,6 @@ def print_wrapped_text(text, width=LINE_WIDTH):
 def format_type_line(type_line):
     return format_printer_text(type_line)
 
-def print_image_paced(image, chunk_size=256, delay=0.2):
-    # No flow-control wiring to the printer (TX+GND only), so a full-speed burst
-    # can overflow its buffer and drop bytes, shearing the image diagonally.
-    # Trickle the raster payload instead of sending it in one write.
-    im = EscposImage(image)
-    header = (
-        GS + b'v0' + bytes((0,))
-        + p._int_low_high(im.width_bytes, 2)
-        + p._int_low_high(im.height, 2)
-    )
-    p._raw(header)
-    data = im.to_raster_format()
-    for i in range(0, len(data), chunk_size):
-        p._raw(data[i:i + chunk_size])
-        time.sleep(delay)
-
 def print_random_card(cmc): #function to print a card's text and art
     path = os.path.join(ART_ROOT, str(cmc), 'converted_files')
     try:
@@ -154,7 +136,7 @@ def print_random_card(cmc): #function to print a card's text and art
         with Image.open(os.path.join(path, art_file)) as art:
             half_size = (art.width // 2, art.height // 2)
             try:
-                print_image_paced(art.resize(half_size))
+                p.image(art.resize(half_size))
             except Exception as image_error:
                 # Image send failed/glitched - resync so the corruption doesn't
                 # bleed into the text printed below.
@@ -187,7 +169,7 @@ def print_random_card(cmc): #function to print a card's text and art
 
 def print_vanguard():
     p.hw('INIT')
-    print_image_paced(os.path.join(BASE_DIR, "avatar.bmp"))
+    p.image(os.path.join(BASE_DIR, "avatar.bmp"))
 
 
 
