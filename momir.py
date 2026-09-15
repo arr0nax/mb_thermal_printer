@@ -149,9 +149,9 @@ def print_random_card(cmc): #function to print a card's text and art
         padding = header_width - len(card_name) - len(mana_cost)
         header = card_name + (' ' * padding if padding > 0 else '') + mana_cost
         p.textln(header)
+        p.set(align='center', normal_textsize=True)
         p.textln("")
 
-        p.set(align='center')
         with Image.open(os.path.join(path, art_file)) as art:
             half_size = (art.width // 2, art.height // 2)
             try:
