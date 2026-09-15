@@ -5,7 +5,7 @@ PIP := ./bin/pip
 
 .DEFAULT_GOAL := install
 
-.PHONY: install install-mac venv clean
+.PHONY: install install-mac seed venv clean
 
 install: venv
 	$(PIP) install --upgrade pip
@@ -14,6 +14,12 @@ install: venv
 install-mac: venv
 	$(PIP) install --upgrade pip
 	$(PIP) install -r requirements.txt
+
+seed:
+	./bin/python get_card_data_from_scryfall.py
+	./bin/python cleanup_cards.py --write
+	./bin/python download_art_from_scryfall.py
+	./convert_images_to_monochrome.sh
 
 # the venv lives in the project root, so bin/python3 is the interpreter
 venv:
