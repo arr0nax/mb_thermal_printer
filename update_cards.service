@@ -1,0 +1,13 @@
+[Unit]
+Description=Update Momir creature card database on startup
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=arronax
+WorkingDirectory=/home/arronax/momir
+ExecStart=/home/arronax/momir/run_update_cards.sh
+
+[Install]
+WantedBy=multi-user.target
